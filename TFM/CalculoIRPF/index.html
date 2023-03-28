@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba</title>
+    <style>
+        html, body, #map{
+            height: 100%;
+            width: 100%; 
+            border: 0; 
+            padding: 0; 
+            overflow-x: hidden;
+        }
+        aside {
+        position: fixed;
+        top: 20px;
+        right: -300px;
+        width: 300px;
+        height: 100%;
+        background-color: black;
+        z-index: 9999;
+        transition: right 0.3s ease-in-out;
+        }
+
+        aside.mostrar {
+        right: 0;
+        }
+
+        #cerrar {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        }
+    </style>
+
+    
+</head>
+<body>
+    <h1>Chat con GPT-3</h1>
+    <div id="chat">
+      <div id="respuesta"></div>
+      <input type="text" id="input-mensaje" placeholder="Escribe tu mensaje aquí y presiona Enter">
+    </div>
+    <script src="../ChatGPTimplementacion/chatgpt.js"></script>
+</body>
+</html>
