@@ -42,7 +42,7 @@ const taxirpf = {
   
     for (let region in taxirpf) {
       taxResults2[region] = taxirpf[region][bracketIndex];
-      console.log('aqui',taxResults2)
+      //console.log('aqui',taxResults2)
     }
   
     return taxResults2;
@@ -57,6 +57,8 @@ const taxirpf = {
     button.addEventListener("click", function () {
       const wealth = parseInt(document.getElementById("wealth2").value);
       taxPercentages = calculateTaxirpf(wealth);
+      const taxPercentagesCalculatedEvent2 = new CustomEvent('taxPercentagesCalculated2', { detail: { taxPercentages } });
+      document.dispatchEvent(taxPercentagesCalculatedEvent2);
   
       let resultsHtml = "<h2>Porcentajes de impuestos en IRPF:</h2><ul>";
       for (let region in taxPercentages) {
@@ -67,4 +69,3 @@ const taxirpf = {
       resultsDiv.innerHTML = resultsHtml;
     });
   });
-  
