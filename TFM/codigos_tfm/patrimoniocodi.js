@@ -1,4 +1,4 @@
-const taxRates = {  //Se definen las tasas impositivas para cada región
+const taxRates = {  
     Cataluña: [0.21, 0.315, 0.525, 0.945, 1.365, 1.785, 2.205, 3.2],
     Aragon: [0.2, 0.3, 0.5, 0.9, 1.3, 1.7, 2.1, 3.5],
     Baleares: [0.28, 0.41, 0.69, 1.24, 1.79, 2.35, 2.9, 3.45],
@@ -18,7 +18,7 @@ const taxRates = {  //Se definen las tasas impositivas para cada región
     Pais_Vasco: [0.2, 0.2, 0.2, 0.6, 1, 1.5, 1.75, 2]
   };
   
-  const wealthThresholds = [  // Se definen los umbrales de patrimonio para determinar el tramo al que pertenece un patrimonio
+  const wealthThresholds = [  
     167129,
     334252,
     668499,
@@ -28,57 +28,42 @@ const taxRates = {  //Se definen las tasas impositivas para cada región
     10000000,
   ];
   
-  function findTaxBracket(wealth) {  //Se inicializa una variable llamada bracketIndex en 0. Esta variable se usa para llevar un conteo del índice del tramo impositivo en el que se encuentra el patrimonio ingresado
+  function findTaxBracket(wealth) {  
     let bracketIndex = 0; 
-    for (let threshold of wealthThresholds) { // Se itera sobre cada umbral de patrimonio en el array wealthThresholds,Si el patrimonio ingresado es menor o igual al umbral actual (threshold), se rompe el bucle. Esto significa que se ha encontrado el tramo impositivo correcto para el patrimonio ingresado.
-      if (wealth <= threshold) break; // Si el patrimonio es mayor al umbral actual, se incrementa el contador bracketIndex en 1. Esto indica que aún no se ha encontrado el tramo correcto y se debe continuar buscando en el siguiente.
+    for (let threshold of wealthThresholds) { 
+      if (wealth <= threshold) break; 
       bracketIndex++;
     }
-    return bracketIndex; // Una vez que se ha encontrado el tramo impositivo correcto, se devuelve el índice del tramo (bracketIndex).
+    return bracketIndex; 
   }
   
-  function calculateTaxRates(wealth) { // Se llama a la función findTaxBracket para determinar el índice del tramo impositivo correspondiente al patrimonio ingresado.
+  function calculateTaxRates(wealth) {
     const bracketIndex = findTaxBracket(wealth);
-    let taxResults = {};  //Se inicializa un objeto vacío llamado taxResults para almacenar los resultados
-  // Se itera sobre cada región en el objeto taxRates.
-    for (let region in taxRates) {// Se accede al array de tasas impositivas de la región actual (taxRates[region])y se obtiene la tasa impositiva correspondiente al índice del tramo impositivo encontrado anteriormente (bracketIndex).
+    let taxResults = {};  
+    for (let region in taxRates) {
       taxResults[region] = taxRates[region][bracketIndex];
-      
     }
-  // Una vez que se han obtenido las tasas impositivas para todas las regiones en el tramo impositivo encontrado, se devuelve el objeto taxResults con los resultado
     return taxResults;
    
   }
   
- // Espera a que el contenido de la página web esté completamente cargado
 document.addEventListener("DOMContentLoaded", function () {
-  // Obtiene una referencia al botón "Calcular" usando su ID "calculateButton"
   const button = document.getElementById("calculateButton");
-  // Obtiene una referencia al elemento 'div' donde se mostrarán los resultados, usando su ID "results"
   const resultsDiv = document.getElementById("results");
-  // Declara una variable para almacenar los porcentajes de impuestos de cada región
   let taxPercentages = {};
 
-  // Agrega un controlador de eventos al botón "Calcular" para ejecutar la función cuando se haga clic en él
   button.addEventListener("click", function () {
-      // Obtiene el valor numérico ingresado en el campo de entrada "wealth" y lo convierte a un entero
       const wealth = parseInt(document.getElementById("wealth").value);
-      // Llama a la función 'calculateTaxRates' con el valor de 'wealth' y guarda el objeto resultante en 'taxPercentages'
       taxPercentages = calculateTaxRates(wealth);
       const taxPercentagesCalculatedEvent = new CustomEvent('taxPercentagesCalculated', { detail: { taxPercentages } });
       document.dispatchEvent(taxPercentagesCalculatedEvent);
-  
-      //console.log('aqui2',taxPercentages)
 
-      // Prepara el HTML para mostrar los resultados
       let resultsHtml = "<h2>Porcentajes de impuestos al Patrimonio:</h2><ul>";
-      // Itera sobre las regiones en 'taxPercentages' y agrega cada porcentaje de impuesto al HTML de los resultados
       for (let region in taxPercentages) {
           resultsHtml += `<li>${region}: ${taxPercentages[region]}%</li>`;
       }
       resultsHtml += "</ul>";
 
-      // Establece el contenido HTML de 'resultsDiv' con el HTML de los resultados
       resultsDiv.innerHTML = resultsHtml;
       
       
