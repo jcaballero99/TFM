@@ -1,5 +1,5 @@
-define(['dojo/dom','dojo/_base/declare', 'jimu/BaseWidget'],
-  function(dom, declare, BaseWidget) {
+define(["esri/dijit/AttributeInspector","esri/graphic",'dojo/dom','dojo/_base/declare', 'jimu/BaseWidget'],
+  function(AttributeInspector,Graphic, dom, declare, BaseWidget) {
     //To create a widget, you need to derive from BaseWidget.
     return declare([BaseWidget], {
       // Custom widget code goes here
@@ -15,11 +15,18 @@ define(['dojo/dom','dojo/_base/declare', 'jimu/BaseWidget'],
       postCreate: function() {
         console.log('postCreate');
         this.calculationsDone = 0;
+
       },
 
       startup: function() {
        console.log('startup');
-       
+       console.log(this.map)
+       let idCapa = this.map.itemInfo.itemData.operationalLayers[0].id
+       this.comunidadesFL = this.map.getLayer(idCapa)
+      //  let params = this.comunidadesFL.infoTemplate.info.fieldInfos
+      //  this.attinspect = new AttributeInspector(params,this.map)
+      //  console.log(this.attinspect)
+       console.log('comunidades',this.comunidadesFL)   
       },
 
       patrimoniocalc: function(){
@@ -306,11 +313,33 @@ define(['dojo/dom','dojo/_base/declare', 'jimu/BaseWidget'],
       
           for (let region in this.finalPercentagesIP) {
             puntosInversion[region] = (this.finalPercentagesIP[region] + this.finalPercentagesIRPF[region] + totaldatos[region]).toFixed(2);
+
+            this.comunidadesFL.queryFeatures({}, (featureSet) => {
+              const featuresToUpdate = featureSet.features.map((feature) => {
+                feature.attributes.Index_Invest = puntosInversion;
+                return feature;
+              });
+              this.comunidadesFL.applyEdits(null, featuresToUpdate, null, function () {
+                alert('Tax index updated for all features.');
+              }, function (error) {
+                alert('Error updating tax index: ' + error);
+              });
+            });
+                        // let attributes = {
+            //   'NAMEUNIT': region,
+            //   'Index_Invest': puntosInversion[region]
+            // }
+            // console.log('atributos:', attributes)
+            // let nuevoField = new Graphic(null, null, attributes)
+            // this.comunidadesFL.applyEdits(null, [nuevoField])
           }
       
           console.log('puntosInversion', puntosInversion);
+          console.log('comunidades',this.comunidadesFL)   
+
         }
-      }
+          // this.comunidadesFL.applyEdits(null,)
+        },
       
 
 
