@@ -54,7 +54,7 @@ document.addEventListener('taxPercentagesCalculated2', function (event) {
 
     console.log('adjustedPercentagesIRPF', adjustedPercentagesIRPF);
 
-    finalPercentagesIRPF = {};
+    this.finalPercentagesIRPF = {};
     for (let region in adjustedPercentagesIRPF) {
       finalPercentagesIRPF[region] = adjustedPercentagesIRPF[region] * 0.3;
     }
@@ -89,7 +89,7 @@ function sumPercentages() {
     let puntosInversion = {};
 
     for (let region in finalPercentagesIP) {
-      puntosInversion[region] = (finalPercentagesIP[region] + finalPercentagesIRPF[region] + totaldatos[region]).toFixed(2);
+      puntosInversion[region] = (finalPercentagesIP[region] + this.finalPercentagesIRPF[region] + totaldatos[region]).toFixed(2);
     }
 
     console.log('puntosInversion', puntosInversion);
